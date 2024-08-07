@@ -1,0 +1,65 @@
+create database e_commerce;
+
+
+create table counties(
+    code int primary key ,
+    name varchar(20) unicode not null ,
+    continent_name varchar(20) not null
+);
+
+create table Users(
+    id int primary key,
+    full_name varchar(20) not null ,
+    email varchar(20) unicode,
+    gender char(1) check ( gender='m' or gender='f') not null  ,
+    date_of_birth varchar(15) not null ,
+    create_at DATETIME not null default CURRENT_TIMESTAMP,
+    country_code int,
+    foreign key (country_code) references counties(code)
+);
+
+create table orders(
+    id int primary key ,
+    user_id int,
+    status varchar(6) check ( status='start' or status='finish') not null ,
+    created_at datetime not null default CURRENT_TIMESTAMP,
+    foreign key (user_id) references users(id)
+);
+
+create table products(
+    id int primary key ,
+    name varchar(10) not null ,
+    price int default 0 not null ,
+    status varchar(10) check ( status='valid' or status='expired') not null ,
+    create_at datetime DEFAULT CURRENT_TIMESTAMP not null
+);
+
+create table order_products(
+    order_id int,
+    products_id int,
+    quantity int default 0 not null ,
+    foreign key (order_id) references orders(id),
+    foreign key (products_id) references products(id)
+);
+
+insert into counties value ('1','jeddah','jeddah');
+insert into counties value ('2','albahaah','albahaah');
+insert into counties value ('3','Tabok','Tabok');
+
+insert into users value (1,'mohammed','mohammed@gmail.com','m','1999-09-09',CURRENT_TIMESTAMP,1);
+insert into users value (2,'Abdullah','Abdullah@gmail.com','m','1999-11-09',CURRENT_TIMESTAMP,2);
+insert into users value (3,'Tariq','Tariq@gmail.com','m','1985-11-09',CURRENT_TIMESTAMP,3);
+
+insert into products value (1,'smart phone',1500,'expired',CURRENT_TIMESTAMP);
+insert into products value (2,'T-shirt',1800,'valid',CURRENT_TIMESTAMP);
+insert into products value (3,'cap',100,'valid',CURRENT_TIMESTAMP);
+
+insert into orders value (1,2,'finish',CURRENT_TIMESTAMP);
+insert into orders value (2,1,'start',CURRENT_TIMESTAMP);
+insert into orders value (3,3,'start',CURRENT_TIMESTAMP);
+
+insert into order_products value (1,2,1);
+insert into order_products value (2,1,12);
+insert into order_products value (3,3,2);
+
+delete from  products where id='1';
